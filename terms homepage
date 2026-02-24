@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Licensing Terms | DocumentCurrency</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="index.html">
+          <div class="brand-badge"></div>
+          <div>
+            <div class="brand-title">DocumentCurrency</div>
+            <span class="brand-sub">Licensing Terms</span>
+          </div>
+        </a>
+        <div class="links">
+          <a href="index.html">Licensing</a>
+          <a href="enterprise.html">Enterprise</a>
+          <a href="terms.html">Terms</a>
+          <a href="api/license/tiers.json" target="_blank" rel="noreferrer">API</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="container">
+      <h1 class="h1">Terms & Conditions</h1>
+      <p class="lede">
+        These terms define the licensing framework for DOC.USD and TransitCloud. This is a business-ready template.
+        Replace bracketed fields before production use.
+      </p>
+      <div class="notice small">
+        <strong>Important:</strong> This is not legal advice. For enterprise/government sales, use counsel to finalize.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="card">
+        <h2 class="h2">1) Definitions</h2>
+        <p class="small">
+          “Software” means DocumentCurrency protocol materials, TransitCloud components, registry interfaces, and related tooling.
+          “License Token” means a cryptographically signed license record granting defined permissions.
+        </p>
+
+        <h2 class="h2">2) Ownership</h2>
+        <p class="small">
+          All right, title, and interest in the Software and protocol specification remain with the Author of Record (Kam Swygert).
+          Licensees receive a limited, revocable right to use the Software under an applicable tier.
+        </p>
+
+        <h2 class="h2">3) License Scope</h2>
+        <p class="small">
+          License scope is determined by tier and permission flags contained in the License Token (e.g. <code>issue_documents</code>, <code>registry_write</code>, <code>run_node</code>).
+          Use beyond granted permissions is prohibited.
+        </p>
+
+        <h2 class="h2">4) Restrictions</h2>
+        <div class="small">
+          <ul>
+            <li>No misrepresentation of protocol authorship or ownership.</li>
+            <li>No use for unlawful activity or to evade regulatory requirements.</li>
+            <li>No removal of attribution where required by the applicable license tier.</li>
+          </ul>
+        </div>
+
+        <h2 class="h2">5) Compliance</h2>
+        <p class="small">
+          Licensee is responsible for compliance with applicable laws, financial regulations, privacy/security obligations, and record retention requirements.
+        </p>
+
+        <h2 class="h2">6) Term, Renewal, Revocation</h2>
+        <p class="small">
+          Enterprise licenses are time-bound and may be renewed by contract. Licenses may be revoked for breach, non-payment, or misuse.
+        </p>
+
+        <h2 class="h2">7) Warranty Disclaimer</h2>
+        <p class="small">
+          Software is provided “AS IS” without warranties of any kind. Enterprise contracts may include negotiated SLAs and support obligations.
+        </p>
+
+        <h2 class="h2">8) Limitation of Liability</h2>
+        <p class="small">
+          To the maximum extent permitted by law, liability is limited to fees paid in the preceding 12 months, unless otherwise agreed in writing.
+        </p>
+
+        <h2 class="h2">9) Contact</h2>
+        <p class="small">
+          Enterprise licensing inquiries: <strong>[Add email]</strong> • Phone: <strong>[Add phone]</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      DocumentCurrency Licensing Terms • Author of Record: Kam Swygert
+    </div>
+  </div>
+</body>
+</html>
