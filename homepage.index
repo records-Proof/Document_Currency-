@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TransitCloud — Verifiable Documents (Developer Edition)</title>
+  <meta name="description" content="TransitCloud converts financial documents into cryptographically verifiable instruments: deterministic canonicalization, SHA-256 root hashes, Ed25519 signatures, proof bundles, and optional on-chain anchoring." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">TransitCloud</span>
+        <span class="brand__tag">Developer Edition</span>
+      </a>
+
+      <nav class="nav">
+        <a href="./docs.html">Docs</a>
+        <a href="./developers.html">Developers</a>
+        <a href="#security">Security</a>
+        <a href="#pilot">Pilot</a>
+      </nav>
+
+      <div class="topbar__cta">
+        <a class="btn btn--ghost" href="./docs.html#quickstart">Quickstart</a>
+        <a class="btn btn--primary" href="#contact">Request a Pilot</a>
+        <button class="iconbtn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow">Verifiable Financial Documents • Proof Bundles • Optional Onchain Anchors</p>
+          <h1>Documents that verify themselves.</h1>
+          <p class="lead">
+            TransitCloud turns invoices, receipts, and audit records into tamper-evident instruments:
+            deterministic canonicalization, SHA-256 root hashes, Ed25519 signatures, and portable proof bundles.
+          </p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="./docs.html#quickstart">Start building</a>
+            <a class="btn btn--ghost" href="./developers.html#api">View API</a>
+          </div>
+
+          <div class="hero__meta">
+            <div class="metaCard">
+              <div class="metaCard__k">Integrity</div>
+              <div class="metaCard__v">SHA-256 root hash</div>
+            </div>
+            <div class="metaCard">
+              <div class="metaCard__k">Authenticity</div>
+              <div class="metaCard__v">Ed25519 signatures</div>
+            </div>
+            <div class="metaCard">
+              <div class="metaCard__k">Reproducibility</div>
+              <div class="metaCard__v">Canonical JSON</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__panel">
+          <div class="terminal">
+            <div class="terminal__bar">
+              <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+              <span class="terminal__title">verify-doc.sh</span>
+            </div>
+            <pre class="terminal__body"><code>$ transitcloud canonize invoice.json > invoice.canonical.json
+$ transitcloud hash invoice.canonical.json
+sha256: e5fc9f810e6297def781caca7041ae1bdf8bf6175c1c2e2b759f9ea1caddea90
+
+$ transitcloud sign --key ed25519_private.pem invoice.canonical.json > invoice.sig
+$ transitcloud verify --pub ed25519_public.pem --sig invoice.sig invoice.canonical.json
+OK: signature valid
+
+$ transitcloud bundle invoice.canonical.json invoice.sig > proof.bundle.json
+OK: proof bundle created</code></pre>
+          </div>
+
+          <div class="panelNote">
+            Built for regulated workflows: audit trails, receipts, custody, and provable document movement.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="value">
+      <div class="container">
+        <div class="section__head">
+          <h2>Why TransitCloud</h2>
+          <p>Stop relying on “trust me” documents. Make verification native to the document itself.</p>
+        </div>
+
+        <div class="grid3">
+          <article class="card">
+            <h3>Deterministic builds</h3>
+            <p>Canonical JSON pipelines produce reproducible outputs and stable hashes across environments.</p>
+            <ul class="bullets">
+              <li>Canonicalization rules</li>
+              <li>Strict field ordering</li>
+              <li>Stable hashing inputs</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Portable proof bundles</h3>
+            <p>Ship the proof with the document. Verify offline. Store long-term. Audit later.</p>
+            <ul class="bullets">
+              <li>Root hash + metadata</li>
+              <li>Signature sets</li>
+              <li>Receipts & custody events</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Onchain-ready anchors</h3>
+            <p>Optionally anchor roots on EVM networks for public timestamped attestation.</p>
+            <ul class="bullets">
+              <li>Hash → chain anchor</li>
+              <li>Proof-of-record</li>
+              <li>Non-custodial verification</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="security">
+      <div class="container">
+        <div class="split">
+          <div>
+            <h2>Security model</h2>
+            <p class="lead2">
+              TransitCloud is designed for integrity, authenticity, and traceability.
+              The system does not depend on a central database for verification.
+            </p>
+            <div class="miniGrid">
+              <div class="miniCard">
+                <div class="miniCard__title">Threat: document tampering</div>
+                <div class="miniCard__desc">Mitigation: canonicalization + content hash; any change breaks verification.</div>
+              </div>
+              <div class="miniCard">
+                <div class="miniCard__title">Threat: forged issuer</div>
+                <div class="miniCard__desc">Mitigation: Ed25519 signatures + key fingerprint pinning.</div>
+              </div>
+              <div class="miniCard">
+                <div class="miniCard__title">Threat: audit disputes</div>
+                <div class="miniCard__desc">Mitigation: proof bundle includes receipts, roots, and custody events.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card--code">
+            <h3>Verification primitives</h3>
+            <pre><code>Canonical JSON  → stable bytes
+SHA-256         → deterministic root hash
+Ed25519         → issuer authenticity
+Bundle          → portable proof record
+Anchor (opt.)   → public timestamp attestation</code></pre>
+            <a class="link" href="./developers.html#recipes">See verification recipes →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pilot">
+      <div class="container">
+        <div class="callout">
+          <div class="callout__copy">
+            <h2>South Carolina pilot-ready</h2>
+            <p>
+              TransitCloud can be piloted with invoices, receipts, and audit records under strict controls:
+              limited participants, clear disclosures, and full logging.
+            </p>
+            <div class="callout__badges">
+              <span class="badge">No speculative trading</span>
+              <span class="badge">Audit-first</span>
+              <span class="badge">Compliance friendly</span>
+              <span class="badge">Offline verifiable</span>
+            </div>
+          </div>
+          <div class="callout__cta">
+            <a class="btn btn--primary" href="#contact">Request a pilot</a>
+            <a class="btn btn--ghost" href="./docs.html#sandbox">Sandbox packet</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section__head">
+          <h2>Contact</h2>
+          <p>Use this form to generate a ready-to-send email template. It copies to your clipboard.</p>
+        </div>
+
+        <form class="form" id="contactForm">
+          <div class="formRow">
+            <label>
+              Recipient (optional)
+              <input type="text" id="recipient" placeholder="Securities Division / Innovation Contact" />
+            </label>
+            <label>
+              Your email
+              <input type="email" id="fromEmail" placeholder="kam@domain.com" />
+            </label>
+          </div>
+
+          <label>
+            Message focus
+            <select id="focus">
+              <option value="sandbox">Sandbox / innovation review</option>
+              <option value="pilot">Business pilot</option>
+              <option value="enterprise">Enterprise verification</option>
+            </select>
+          </label>
+
+          <label>
+            Notes (optional)
+            <textarea id="notes" rows="4" placeholder="Any details you want included…"></textarea>
+          </label>
+
+          <div class="formActions">
+            <button class="btn btn--primary" type="submit">Generate email</button>
+            <button class="btn btn--ghost" type="button" id="copyEmailBtn" disabled>Copy</button>
+          </div>
+
+          <div class="output" id="emailOutput" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="footer__brand">TransitCloud</div>
+        <div class="footer__sub">Verifiable document infrastructure for finance and audit.</div>
+      </div>
+      <div class="footer__links">
+        <a href="./docs.html">Docs</a>
+        <a href="./developers.html">Developers</a>
+        <a href="./docs.html#spec">Spec</a>
+        <a href="./developers.html#api">API</a>
+      </div>
+      <div class="footer__meta">
+        <div>© <span id="year"></span> Kam Swygert</div>
+        <div class="muted">Developer Edition</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>}
+.section {
+  padding:60px 40px;
+  border-top:1px solid #222;
+}
+.card {
+  background:#11151F;
+  padding:20px;
+  margin:20px 0;
+  border-radius:10px;
+}
+.footer {
+  padding:40px;
+  border-top:1px solid #222;
+  font-size:14px;
+}
+button {
+  background:#4A90E2;
+  color:white;
+  border:none;
+  padding:12px 20px;
+  border-radius:6px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div><strong>DocumentCurrency</strong></div>
+  <nav>
+    <a href="protocol.html">Protocol</a>
+    <a href="transitcloud.html">TransitCloud</a>
+    <a href="registry.html">Registry</a>
+    <a href="verification.html">Verify</a>
+    <a href="whitepaper.html">Whitepaper</a>
+    <a href="federal.html">Federal</a>
+    <a href="developers.html">Developers</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Verifiable Financial Documents</h1>
+  <p>
+  DOC.USD is a cryptographically verifiable document currency system that transforms invoices,
+  receipts, and financial records into tamper-proof, independently verifiable instruments.
+  </p>
+  <button onclick="location.href='whitepaper.html'">Read Whitepaper</button>
+</section>
+
+<section class="section">
+  <h2>What This Solves</h2>
+  <div class="card">
+    Financial documents today are not verifiable. DOC.USD creates
+    tamper-evident, hash-verifiable financial records that can be audited independently.
+  </div>
+</section>
+
+<section class="section">
+  <h2>How It Works</h2>
+  <div class="card">
+    DOC.USD → INSTABYTE → INSTA-FICHE → IPFS → On-Chain Registry
+  </div>
+</section>
+
+<section class="section">
+  <h2>Live Public Registry</h2>
+  <div class="card">
+    The system includes a public content-addressed registry that maps document instruments
+    to immutable IPFS CIDs and on-chain anchors.
+  </div>
+  <button onclick="location.href='registry.html'">View Registry</button>
+</section>
+
+<section class="footer">
+  Author of Record: Kam Swygert<br>
+  Powered by TransitCloud
+</section>
+
+</body>
+</html>
