@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DocumentCurrency Licensing | Enterprise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/style.css">
+  <script defer src="assets/app.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="index.html">
+          <div class="brand-badge"></div>
+          <div>
+            <div class="brand-title">DocumentCurrency</div>
+            <span class="brand-sub">Enterprise Licensing System</span>
+          </div>
+        </a>
+        <div class="links">
+          <a href="index.html">Licensing</a>
+          <a href="enterprise.html">Enterprise</a>
+          <a href="terms.html">Terms</a>
+          <a href="api/license/tiers.json" target="_blank" rel="noreferrer">API</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="container">
+      <h1 class="h1">Enterprise Licensing</h1>
+      <p class="lede">
+        A deployable licensing framework for DOC.USD and TransitCloud.
+        Issue verifiable license tokens, enforce permissions at runtime, and support enterprise / government deployments.
+      </p>
+      <div class="btnrow">
+        <a class="btn" href="enterprise.html">Enterprise Offering</a>
+        <a class="btn secondary" href="terms.html">Read Terms</a>
+        <button class="btn secondary" onclick="openTiers()">View Tiers JSON</button>
+      </div>
+      <div class="pillrow">
+        <div class="pill">License Tokens</div>
+        <div class="pill">Permission Flags</div>
+        <div class="pill">SLA + Support</div>
+        <div class="pill">On-Prem / Private Cloud</div>
+        <div class="pill">Registry + Issuance Controls</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="h2">License Tiers</h2>
+      <div class="grid">
+        <div class="card third">
+          <div class="kv">
+            <div class="k">Developer</div>
+            <div class="v">Build and test integrations. No production issuance.</div>
+          </div>
+          <hr class="sep">
+          <div class="small">Includes: docs, sandbox tools, read-only verification APIs.</div>
+        </div>
+
+        <div class="card third">
+          <div class="kv">
+            <div class="k">Commercial</div>
+            <div class="v">Production issuance for SaaS/fintech. Usage-based pricing.</div>
+          </div>
+          <hr class="sep">
+          <div class="small">Includes: issuance permission, integration support, registry access.</div>
+        </div>
+
+        <div class="card third">
+          <div class="kv">
+            <div class="k">Enterprise / Government</div>
+            <div class="v">Run private nodes, HSM signing, custom compliance + SLA.</div>
+          </div>
+          <hr class="sep">
+          <div class="small">Includes: on-prem deployment, audits, incident response, legal support.</div>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <h2 class="h2">How Enforcement Works</h2>
+      <div class="card">
+        <div class="code">TransitCloud Issuance Request
+  → verify license token (tier, expiry, signature)
+  → check permission flags (issue_documents, registry_write, run_node)
+  → allow or deny operation
+  → emit receipt + audit event</div>
+        <p class="small">
+          GitHub Pages hosts the licensing UI and static tier metadata. For cryptographic verification, deploy the serverless verify endpoint.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <h2 class="h2">License Verify (Static Mode)</h2>
+      <div class="notice small">
+        <strong>Note:</strong> This verification runs in the browser only and checks structure, not signatures.
+        Deploy <code>api/license/verify.example.js</code> to enable cryptographic verification.
+      </div>
+
+      <div class="grid" style="margin-top:14px;">
+        <div class="card half">
+          <label for="license_json">Paste License JSON</label>
+          <textarea id="license_json" rows="12" placeholder='{"license_id":"DOCUSD-LIC-000124", "...":"..."}'></textarea>
+          <div class="btnrow">
+            <button class="btn" onclick="verifyLicenseStatic()">Verify (Static)</button>
+            <button class="btn secondary" onclick="loadSample()">Load Sample</button>
+          </div>
+        </div>
+
+        <div class="card half">
+          <div class="kv">
+            <div class="k">Result</div>
+            <div class="v">
+              <pre id="verify_out" class="code">—</pre>
+            </div>
+          </div>
+          <p class="small">
+            Production: route verification through a serverless API that validates Ed25519 signatures and checks revocation/expiry.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      Author of Record: Kam Swygert • Powered by TransitCloud • DOC.USD Licensing System
+    </div>
+  </div>
+</body>
+</html>
