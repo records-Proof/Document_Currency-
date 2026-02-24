@@ -1,0 +1,10 @@
+/ (root)
+  index.html              ← main licensing homepage
+  developers.html         ← developer edition
+  enterprise.html         ← enterprise license page
+  terms.html              ← licensing terms
+  registry.html           ← public registry
+  verification.html       ← verify tools
+  assets/
+    styles.css
+    app.js
