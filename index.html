@@ -1,40 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TransitCloud — Verifiable Documents (Developer Edition)</title>
-  <meta name="description" content="TransitCloud converts financial documents into cryptographically verifiable instruments: deterministic canonicalization, SHA-256 root hashes, Ed25519 signatures, proof bundles, and optional on-chain anchoring." />
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="UTF-8">
+  <title>Enterprise License | DocumentCurrency</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="container topbar__inner">
-      <a class="brand" href="./index.html">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__name">TransitCloud</span>
-        <span class="brand__tag">Developer Edition</span>
-      </a>
-
-      <nav class="nav">
-        <a href="./docs.html">Docs</a>
-        <a href="./developers.html">Developers</a>
-        <a href="#security">Security</a>
-        <a href="#pilot">Pilot</a>
-      </nav>
-
-      <div class="topbar__cta">
-        <a class="btn btn--ghost" href="./docs.html#quickstart">Quickstart</a>
-        <a class="btn btn--primary" href="#contact">Request a Pilot</a>
-        <button class="iconbtn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">◐</button>
+  <div class="topbar">
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="index.html">
+          <div class="brand-badge"></div>
+          <div>
+            <div class="brand-title">DocumentCurrency</div>
+            <span class="brand-sub">Enterprise / Government License</span>
+          </div>
+        </a>
+        <div class="links">
+          <a href="index.html">Licensing</a>
+          <a href="enterprise.html">Enterprise</a>
+          <a href="terms.html">Terms</a>
+          <a href="api/license/tiers.json" target="_blank" rel="noreferrer">API</a>
+        </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <section class="hero">
-      <div class="container hero__grid">
-        <div class="hero__copy">
+  <div class="hero">
+    <div class="container">
+      <h1 class="h1">Enterprise License</h1>
+      <p class="lede">
+        Deploy DOC.USD and TransitCloud in private infrastructure with enforceable permissions, auditability, and optional hardware-backed signing.
+      </p>
+      <div class="pillrow">
+        <div class="pill">On-Prem</div>
+        <div class="pill">Private Cloud</div>
+        <div class="pill">HSM / YubiKey</div>
+        <div class="pill">SLA</div>
+        <div class="pill">Compliance Integrations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="grid">
+        <div class="card half">
+          <h2 class="h2">Included Rights</h2>
+          <div class="small">
+            <ul>
+              <li>Run private TransitCloud nodes</li>
+              <li>Issue DOC.USD instruments in production</li>
+              <li>Operate internal registry mirrors</li>
+              <li>Enable registry write permissions (optional)</li>
+              <li>Integrate with enterprise IAM, logging, SIEM</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card half">
+          <h2 class="h2">Support & SLA</h2>
+          <div class="small">
+            <ul>
+              <li>Deployment + configuration support</li>
+              <li>Incident response + priority patches</li>
+              <li>Audit assistance + verification playbooks</li>
+              <li>Uptime SLA (contract)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="h2">Enterprise License Token (Example)</h2>
+          <div class="code">{
+  "license_id": "DOCUSD-LIC-ENTERPRISE-000001",
+  "issued_to": "Example Agency or Corporation",
+  "tier": "enterprise",
+  "permissions": ["issue_documents","run_node","registry_read","registry_write"],
+  "valid_from": "2026-03-01",
+  "valid_to": "2027-03-01",
+  "issuer": "DocumentCurrency / Kam Swygert",
+  "public_key": "ed25519:…",
+  "signature": "…"
+}</div>
+          <p class="small">
+            In production, TransitCloud validates this token (including signature) before allowing issuance or registry writes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container">
+      Enterprise License • DocumentCurrency • Author of Record: Kam Swygert
+    </div>
+  </div>
+</body>
+</html>        <div class="hero__copy">
           <p class="eyebrow">Verifiable Financial Documents • Proof Bundles • Optional Onchain Anchors</p>
           <h1>Documents that verify themselves.</h1>
           <p class="lead">
