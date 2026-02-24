@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TransitCloud Docs — Index</title>
+  <meta name="description" content="TransitCloud documentation index: quickstart, formats, proof bundles, verification, custody/transport, and sandbox packet." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">TransitCloud</span>
+        <span class="brand__tag">Docs</span>
+      </a>
+
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a class="is-active" href="./docs.html">Docs</a>
+        <a href="./developers.html">Developers</a>
+      </nav>
+
+      <div class="topbar__cta">
+        <a class="btn btn--ghost" href="./developers.html#api">API</a>
+        <button class="iconbtn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="pageHead">
+      <div class="container">
+        <h1>Documentation Index</h1>
+        <p class="lead">Everything needed to build, verify, and pilot TransitCloud in regulated workflows.</p>
+
+        <div class="searchRow">
+          <input id="docSearch" type="search" placeholder="Search docs (e.g. canonical, ed25519, bundle, custody, anchor)..." />
+          <span class="kbd">Ctrl / ⌘ + K</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="docsGrid" id="docsGrid">
+          <a class="docCard" href="#quickstart" data-tags="quickstart install cli verify">
+            <h3>Quickstart</h3>
+            <p>Canonize → hash → sign → verify → bundle.</p>
+            <div class="docCard__meta">5 minutes</div>
+          </a>
+
+          <a class="docCard" href="#spec" data-tags="spec formats doc.usd instabyte instafiche raildoc">
+            <h3>Formats & Spec</h3>
+            <p>DOC.USD, proof bundle schema, custody events, invariants.</p>
+            <div class="docCard__meta">Reference</div>
+          </a>
+
+          <a class="docCard" href="#verification" data-tags="verification sha256 ed25519 canonical json">
+            <h3>Verification</h3>
+            <p>How to validate hashes, signatures, and bundle integrity.</p>
+            <div class="docCard__meta">Security</div>
+          </a>
+
+          <a class="docCard" href="#transport" data-tags="transport custody raildoc movement receipts">
+            <h3>Transport & Custody</h3>
+            <p>Receipts, idempotency, audit trails, movement protocol.</p>
+            <div class="docCard__meta">Operations</div>
+          </a>
+
+          <a class="docCard" href="#anchoring" data-tags="onchain anchor evm base timestamp">
+            <h3>Onchain Anchoring</h3>
+            <p>Optional hash anchoring patterns for public attestation.</p>
+            <div class="docCard__meta">Optional</div>
+          </a>
+
+          <a class="docCard" href="#sandbox" data-tags="sandbox regulator south carolina compliance pilot">
+            <h3>Sandbox Packet</h3>
+            <p>What to submit: overview, scope, protections, timeline.</p>
+            <div class="docCard__meta">Regulatory</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="quickstart">
+      <div class="container">
+        <h2>Quickstart</h2>
+        <p class="muted">Replace commands with your actual toolchain. This page is a blueprint.</p>
+
+        <div class="grid2">
+          <div class="card">
+            <h3>1) Canonicalize</h3>
+            <pre><code>input:  invoice.json
+output: invoice.canonical.json</code></pre>
+            <p>Canonical JSON creates stable bytes for hashing and signing.</p>
+          </div>
+
+          <div class="card">
+            <h3>2) Hash</h3>
+            <pre><code>sha256(invoice.canonical.json) → root</code></pre>
+            <p>The root hash is the integrity anchor for the document.</p>
+          </div>
+
+          <div class="card">
+            <h3>3) Sign</h3>
+            <pre><code>ed25519_sign(root or canonical_bytes) → signature</code></pre>
+            <p>Sign the canonical bytes (recommended) to bind semantics to the signature.</p>
+          </div>
+
+          <div class="card">
+            <h3>4) Bundle</h3>
+            <pre><code>bundle = { doc, root, signatures[], metadata }</code></pre>
+            <p>Bundle is portable proof: verify anywhere, anytime.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <strong>Tip:</strong> Keep a single “source of truth” for canonicalization rules. Changes must version-bump the spec.
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="spec">
+      <div class="container">
+        <h2>Formats & Spec</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>DOC.USD (Instrument)</h3>
+            <ul class="bullets">
+              <li>issuer identity + key fingerprint</li>
+              <li>document body (invoice/receipt fields)</li>
+              <li>canonicalization version</li>
+              <li>root hash</li>
+              <li>signature set</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Proof Bundle</h3>
+            <ul class="bullets">
+              <li>canonical document bytes / pointer</li>
+              <li>root hash (sha256)</li>
+              <li>signatures (ed25519)</li>
+              <li>receipts + custody events (optional)</li>
+              <li>chain anchor references (optional)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="verification">
+      <div class="container">
+        <h2>Verification</h2>
+        <div class="card card--code">
+          <pre><code>Verify(bundle):
+  1) canonicalize(doc) → bytes
+  2) sha256(bytes) == bundle.root
+  3) for each signature:
+       ed25519_verify(pubkey, bytes, signature) == true
+  4) if chain_anchor present:
+       confirm anchor references bundle.root
+  5) if custody events present:
+       validate ordering + idempotency invariants</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="transport">
+      <div class="container">
+        <h2>Transport & Custody</h2>
+        <div class="grid2">
+          <div class="card">
+            <h3>Receipt model</h3>
+            <p>Every movement produces a receipt referencing the root hash and a custody event id.</p>
+          </div>
+          <div class="card">
+            <h3>Idempotency</h3>
+            <p>All writes should be idempotent by event id to support retries and replays.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="anchoring">
+      <div class="container">
+        <h2>Onchain Anchoring (Optional)</h2>
+        <p class="lead2">Anchor the root hash on an EVM chain for timestamped attestation without exposing document contents.</p>
+        <div class="grid2">
+          <div class="card">
+            <h3>What goes onchain</h3>
+            <ul class="bullets">
+              <li>root hash (32 bytes)</li>
+              <li>timestamp / block reference</li>
+              <li>optional issuer id</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>What stays offchain</h3>
+            <ul class="bullets">
+              <li>document content</li>
+              <li>PII / sensitive data</li>
+              <li>full custody logs (optional)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sandbox">
+      <div class="container">
+        <h2>Sandbox Packet</h2>
+        <div class="callout">
+          <div class="callout__copy">
+            <p>
+              This section is designed to be copy/pasted into a submission. Keep scope small:
+              limited participants, limited doc types, and clear disclosures.
+            </p>
+            <ul class="bullets">
+              <li>Problem statement + public benefit</li>
+              <li>System overview + verification model</li>
+              <li>Pilot scope, participants, timeline</li>
+              <li>Consumer protections + risk mitigations</li>
+              <li>Exit plan + reporting</li>
+            </ul>
+          </div>
+          <div class="callout__cta">
+            <a class="btn btn--primary" href="./index.html#contact">Generate submission email</a>
+            <a class="btn btn--ghost" href="./developers.html#recipes">Verification recipes</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="footer__brand">TransitCloud</div>
+        <div class="footer__sub">Docs Index — Developer Edition</div>
+      </div>
+      <div class="footer__links">
+        <a href="./index.html">Home</a>
+        <a href="./developers.html">Developers</a>
+      </div>
+      <div class="footer__meta">
+        <div>© <span id="year"></span> Kam Swygert</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
