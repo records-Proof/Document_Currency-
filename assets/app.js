@@ -1,40 +1,58 @@
-(function () {
-  const root = document.documentElement;
+function qs(id){ return document.getElementById(id); }
 
-  // Theme
-  const savedTheme = localStorage.getItem("tc_theme");
-  if (savedTheme === "light" || savedTheme === "dark") {
-    root.setAttribute("data-theme", savedTheme);
+function pretty(obj){
+  return JSON.stringify(obj, null, 2);
+}
+
+// Static-mode verification (works on GitHub Pages):
+// - parses JSON
+// - checks required fields
+// - prints tier + permissions
+function verifyLicenseStatic(){
+  const out = qs("verify_out");
+  out.textContent = "—";
+
+  let obj;
+  try{
+    obj = JSON.parse(qs("license_json").value || "{}");
+  }catch(e){
+    out.textContent = "Invalid JSON.";
+    return;
   }
 
-  const themeToggle = document.getElementById("themeToggle");
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const current = root.getAttribute("data-theme") || "dark";
-      const next = current === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      localStorage.setItem("tc_theme", next);
-    });
+  const required = ["license_id","issued_to","tier","permissions","valid_from","valid_to"];
+  const missing = required.filter(k => obj[k] === undefined || obj[k] === null);
+  if(missing.length){
+    out.textContent = "Missing fields: " + missing.join(", ");
+    return;
   }
 
-  // Footer year
-  const year = document.getElementById("year");
-  if (year) year.textContent = String(new Date().getFullYear());
+  // Basic validation only
+  const summary = {
+    valid: true,
+    mode: "static",
+    license_id: obj.license_id,
+    tier: obj.tier,
+    issued_to: obj.issued_to,
+    permissions: obj.permissions,
+    valid_from: obj.valid_from,
+    valid_to: obj.valid_to,
+    note: "Static-mode check (no signature verification). Deploy verify.example.js to enable cryptographic verification."
+  };
 
-  // Docs search + Cmd/Ctrl+K focus
-  const docSearch = document.getElementById("docSearch");
-  const docsGrid = document.getElementById("docsGrid");
-  if (docSearch && docsGrid) {
-    const cards = Array.from(docsGrid.querySelectorAll("[data-tags]"));
+  out.textContent = pretty(summary);
+}
 
-    const filter = () => {
-      const q = docSearch.value.trim().toLowerCase();
-      cards.forEach((c) => {
-        const tags = (c.getAttribute("data-tags") || "").toLowerCase();
-        const title = (c.querySelector("h3")?.textContent || "").toLowerCase();
-        const show = !q || tags.includes(q) || title.includes(q);
-        c.style.display = show ? "block" : "none";
-      });
+async function loadSample(){
+  const res = await fetch("api/license/sample-license.json", { cache: "no-store" });
+  const j = await res.json();
+  qs("license_json").value = pretty(j);
+  qs("verify_out").textContent = "Loaded sample license JSON.";
+}
+
+async function openTiers(){
+  window.open("api/license/tiers.json", "_blank", "noopener,noreferrer");
+}      });
     };
 
     docSearch.addEventListener("input", filter);
