@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TransitCloud Developers — API & Recipes</title>
+  <meta name="description" content="Developer portal for TransitCloud: API patterns, SDK placeholders, proof bundle schema, verification recipes, and integration guidance." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="./index.html">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">TransitCloud</span>
+        <span class="brand__tag">Developers</span>
+      </a>
+
+      <nav class="nav">
+        <a href="./index.html">Home</a>
+        <a href="./docs.html">Docs</a>
+        <a class="is-active" href="./developers.html">Developers</a>
+      </nav>
+
+      <div class="topbar__cta">
+        <a class="btn btn--ghost" href="#recipes">Recipes</a>
+        <a class="btn btn--primary" href="#api">API Reference</a>
+        <button class="iconbtn" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">◐</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="pageHead">
+      <div class="container">
+        <h1>Developer Portal</h1>
+        <p class="lead">
+          Integrate TransitCloud into apps, services, and custody rails. Verify documents locally, or anchor roots onchain.
+        </p>
+
+        <div class="pillRow">
+          <span class="pill">Canonical JSON</span>
+          <span class="pill">SHA-256</span>
+          <span class="pill">Ed25519</span>
+          <span class="pill">Proof Bundles</span>
+          <span class="pill">Receipts</span>
+          <span class="pill">Optional Anchors</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="api">
+      <div class="container">
+        <div class="section__head">
+          <h2>API Reference (Blueprint)</h2>
+          <p>These endpoints define a clean, production-friendly interface. Adjust names to match your implementation.</p>
+        </div>
+
+        <div class="apiGrid">
+          <div class="card">
+            <h3>POST /v1/canonize</h3>
+            <p>Canonicalize document JSON.</p>
+            <pre><code>{
+  "doc": { "type": "invoice", "version": "DOC.USD.v1", "body": { } },
+  "canon": { "ruleset": "canon.v1" }
+}</code></pre>
+            <div class="muted">Returns canonical bytes (or canonical JSON) + metadata.</div>
+          </div>
+
+          <div class="card">
+            <h3>POST /v1/hash</h3>
+            <p>Generate SHA-256 root from canonical bytes.</p>
+            <pre><code>{
+  "canonical": "base64(...)" 
+}</code></pre>
+            <div class="muted">Returns hex root + algorithm + byteLength.</div>
+          </div>
+
+          <div class="card">
+            <h3>POST /v1/sign</h3>
+            <p>Sign canonical bytes (Ed25519).</p>
+            <pre><code>{
+  "canonical": "base64(...)",
+  "keyRef": "issuer-key-1"
+}</code></pre>
+            <div class="muted">Returns signature + key fingerprint.</div>
+          </div>
+
+          <div class="card">
+            <h3>POST /v1/verify</h3>
+            <p>Verify proof bundle.</p>
+            <pre><code>{
+  "bundle": { "root": "hex", "signatures": [], "doc": {} }
+}</code></pre>
+            <div class="muted">Returns verification report + failures list.</div>
+          </div>
+
+          <div class="card">
+            <h3>POST /v1/bundle</h3>
+            <p>Create portable proof bundle.</p>
+            <pre><code>{
+  "doc": {},
+  "root": "hex",
+  "signatures": []
+}</code></pre>
+            <div class="muted">Returns bundle JSON + bundle hash.</div>
+          </div>
+
+          <div class="card">
+            <h3>POST /v1/anchor (optional)</h3>
+            <p>Write root hash to chain (attestation).</p>
+            <pre><code>{
+  "root": "hex",
+  "network": "base",
+  "mode": "attest"
+}</code></pre>
+            <div class="muted">Returns tx hash + block reference.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="recipes">
+      <div class="container">
+        <div class="section__head">
+          <h2>Verification Recipes</h2>
+          <p>Copy/paste patterns for auditors, integrators, and partners.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="card card--code">
+            <h3>Recipe: verify a bundle</h3>
+            <pre><code>1) bytes = canonicalize(bundle.doc, ruleset)
+2) root  = sha256(bytes)
+3) assert(root == bundle.root)
+
+4) for sig in bundle.signatures:
+     assert(ed25519_verify(sig.pubkey, bytes, sig.signature))
+
+5) report OK</code></pre>
+          </div>
+
+          <div class="card card--code">
+            <h3>Recipe: generate a receipt</h3>
+            <pre><code>receipt = {
+  "eventId": "uuid",
+  "root": "hex",
+  "action": "INGEST|TRANSFER|ARCHIVE",
+  "timestamp": "ISO-8601",
+  "actor": { "id": "issuer", "pubkeyFp": "..." }
+}
+receiptSig = ed25519_sign(canonicalize(receipt), actorPrivKey)</code></pre>
+          </div>
+
+          <div class="card">
+            <h3>Recommended invariants</h3>
+            <ul class="bullets">
+              <li>Canonicalization rules are versioned and immutable per version.</li>
+              <li>Signature binds to canonical bytes, not parsed JSON.</li>
+              <li>All custody writes are idempotent by eventId.</li>
+              <li>Anchoring never publishes sensitive contents.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>SDK plan (placeholders)</h3>
+            <ul class="bullets">
+              <li><strong>@transitcloud/sdk-js</strong> — browser + node</li>
+              <li><strong>@transitcloud/sdk-python</strong> — audit tooling</li>
+              <li><strong>@transitcloud/cli</strong> — canonize/hash/sign/verify/bundle</li>
+            </ul>
+            <a class="link" href="./docs.html#spec">Spec reference →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="status">
+      <div class="container">
+        <div class="callout">
+          <div class="callout__copy">
+            <h2>Production readiness checklist</h2>
+            <ul class="bullets">
+              <li>Formalize spec versions and publish changelog</li>
+              <li>Test vectors for canonicalization + hashing</li>
+              <li>Key management policy + rotation plan</li>
+              <li>Verification report format for auditors</li>
+              <li>Pilot scope + disclosure language</li>
+            </ul>
+          </div>
+          <div class="callout__cta">
+            <a class="btn btn--primary" href="./index.html#contact">Generate outreach email</a>
+            <a class="btn btn--ghost" href="./docs.html#sandbox">Sandbox packet</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="footer__brand">TransitCloud</div>
+        <div class="footer__sub">Developer Portal — API, recipes, integrations</div>
+      </div>
+      <div class="footer__links">
+        <a href="./docs.html">Docs</a>
+        <a href="./index.html#contact">Contact</a>
+      </div>
+      <div class="footer__meta">
+        <div>© <span id="year"></span> Kam Swygert</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
