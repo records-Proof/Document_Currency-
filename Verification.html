@@ -1,0 +1,11 @@
+<h1>Verify DOC.USD Record</h1>
+
+<input id="cid" placeholder="Enter CID">
+<button onclick="verify()">Verify</button>
+
+<script>
+function verify(){
+  let cid = document.getElementById('cid').value;
+  window.open("https://ipfs.io/ipfs/" + cid);
+}
+</script>
